@@ -1,59 +1,69 @@
+var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
+var packageBody,ground
+const Engine = Matter.Engine;
+const World = Matter.World;
+const Bodies = Matter.Bodies;
+const Body = Matter.Body;
 
-var fixedRect,movingRect, Edges;
+function preload()
+{
+	helicopterIMG=loadImage("helicopter.png")
+	packageIMG=loadImage("package.png")
+}
 
 function setup() {
-  createCanvas(800,400);
- fixedRect = createSprite(200, 100, 30, 50);
- fixedRect.shapeColor = "yellow";
- movingRect = createSprite(750,100,50,30);
- movingRect.shapeColor = "yellow";
- movingRect.debug = true;
+	createCanvas(800, 700);
+	rectMode(CENTER);
+	
 
- Edges = createEdgeSprites();
- 
-  movingRect.velocityX = -3;
-  fixedRect.velocityX = +3;
+	packageSprite=createSprite(width/2, 80, 10,10);
+	packageSprite.addImage(packageIMG)
+	packageSprite.scale=0.2
 
- console.log("welcome");
+	helicopterSprite=createSprite(width/2, 200, 10,10);
+	helicopterSprite.addImage(helicopterIMG)
+	helicopterSprite.scale=0.6
+
+	groundSprite=createSprite(width/2, height-35, width,10);
+	groundSprite.shapeColor=color(255)
+
+
+	engine = Engine.create();
+	world = engine.world;
+
+	packageBody = Bodies.circle(width/2 , 200 , 5 , {restitution:3, isStatic:true});
+	World.add(world, packageBody);
+	
+
+	//Create a Ground
+	ground = Bodies.rectangle(width/2, 650, width, 10 , {isStatic:true} );
+ 	World.add(world, ground);
+
+
+	Engine.run(engine);
+  
 }
+
 
 function draw() {
-  background(0);  
+  rectMode(CENTER);
+  background(0);
+  packageSprite.x= packageBody.position.x 
+  packageSprite.y= packageBody.position.y 
 
-  //movingRect.x = mouseX;
-  //movingRect.y = mouseY;
-  
-    movingRect.bounceOff(Edges);
-    fixedRect.bounceOff(Edges);
-
-  if((movingRect.x - fixedRect.x < movingRect.width/2 + fixedRect.width/2 )&& 
-  (movingRect.y - fixedRect.y < movingRect.height/2 + fixedRect.height/2)&& 
-  (fixedRect.x - movingRect.x < movingRect.width/2 + fixedRect.width/2)&&
-  (fixedRect.y - movingRect.y < movingRect.height/2 + fixedRect.height/2)){
-      movingRect.shapeColor = "blue";
-      fixedRect.shapeColor = "blue";
-
-     
-
-    
-  }
-  else{
-        movingRect.shapeColor = "yellow";
-        fixedRect.shapeColor = "yellow";
-      }
-
-    if (movingRect.x - fixedRect.x < fixedRect.width/2 + movingRect.width/2
-        && fixedRect.x - movingRect.x < fixedRect.width/2 + movingRect.width/2) {
-      movingRect.velocityX = movingRect.velocityX * (-1);
-      fixedRect.velocityX = fixedRect.velocityX * (-1);
-    }
-    if (movingRect.y - fixedRect.y < fixedRect.height/2 + movingRect.height/2
-      && fixedRect.y - movingRect.y < fixedRect.height/2 + movingRect.height/2){
-      movingRect.velocityY = movingRect.velocityY * (-1);
-      fixedRect.velocityY = fixedRect.velocityY * (-1);
-    }
-
-    
+	keyPressed();
 
   drawSprites();
+ 
 }
+
+function keyPressed() {
+ if (keyCode === DOWN_ARROW) {
+	Matter.Body.setStatic(packageSprite,false);
+	
+    
+  }
+}
+
+
+
