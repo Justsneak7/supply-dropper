@@ -37,7 +37,12 @@ function setup() {
 
 	//Create a Ground
 	ground = Bodies.rectangle(width/2, 650, width, 10 , {isStatic:true} );
- 	World.add(world, ground);
+	 World.add(world, ground);
+	 
+	 var options ={
+		 'restitution':0.1,
+		 'weight':2.6
+	 }
 
 
 	Engine.run(engine);
@@ -51,7 +56,7 @@ function draw() {
   packageSprite.x= packageBody.position.x 
   packageSprite.y= packageBody.position.y 
 
-	keyPressed();
+	//keyPressed();
 
   drawSprites();
  
@@ -59,7 +64,9 @@ function draw() {
 
 function keyPressed() {
  if (keyCode === DOWN_ARROW) {
-	Matter.Body.setStatic(packageSprite,false);
+	Matter.Body.setStatic(packageBody,false);
+
+	packageSprite.velocityY = 3;
 	
     
   }
